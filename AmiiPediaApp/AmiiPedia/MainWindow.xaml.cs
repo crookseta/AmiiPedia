@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AmiiPedia.Api;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace AmiiPedia
 		public MainWindow()
 		{
 			InitializeComponent();
+			Helper.InitializeClient();
 		}
 	}
 }

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmiiPedia", "AmiiPedia\AmiiPedia.csproj", "{73CDFDFD-E06F-4BF4-8887-4C1BAC868D1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmiiPediaLib", "AmiiPediaLib\AmiiPediaLib.csproj", "{8D98AD04-EE93-46ED-8EF0-474E11980299}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{73CDFDFD-E06F-4BF4-8887-4C1BAC868D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73CDFDFD-E06F-4BF4-8887-4C1BAC868D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73CDFDFD-E06F-4BF4-8887-4C1BAC868D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D98AD04-EE93-46ED-8EF0-474E11980299}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D98AD04-EE93-46ED-8EF0-474E11980299}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D98AD04-EE93-46ED-8EF0-474E11980299}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D98AD04-EE93-46ED-8EF0-474E11980299}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
