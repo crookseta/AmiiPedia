@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmiiPedia", "AmiiPedia\AmiiPedia.csproj", "{73CDFDFD-E06F-4BF4-8887-4C1BAC868D1F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73CDFDFD-E06F-4BF4-8887-4C1BAC868D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73CDFDFD-E06F-4BF4-8887-4C1BAC868D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73CDFDFD-E06F-4BF4-8887-4C1BAC868D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73CDFDFD-E06F-4BF4-8887-4C1BAC868D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E7C6DBE-CAB8-4282-9809-50C5272D12F3}
+	EndGlobalSection
+EndGlobal
