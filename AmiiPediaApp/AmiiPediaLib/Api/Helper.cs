@@ -11,11 +11,11 @@ namespace AmiiPedia.Api
 	public class Helper
 	{
 		public static HttpClient ApiClient { get; set; }
+		public static string BaseAddress { get; } = "https://www.amiiboapi.com/api/amiibo/";
 
 		public static void InitializeClient()
 		{
 			ApiClient = new HttpClient();
-			ApiClient.BaseAddress = new Uri("https://www.amiiboapi.com/api/");
 			ApiClient.DefaultRequestHeaders.Accept.Clear();
 			ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 		}

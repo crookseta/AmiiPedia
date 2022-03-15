@@ -12,9 +12,8 @@ namespace AmiiPedia.Processor
 {
 	public class AmiiboProcessor
 	{
-		public const string baseUrl = "amiibo";
-
-		public async Task<List<AmiiboModel>> LoadAmiibos()
+		private static string baseUrl = Helper.BaseAddress;
+		public static async Task<AmiiboModel> LoadAmiibos()
 		{
 			string url = baseUrl;
 
@@ -22,7 +21,7 @@ namespace AmiiPedia.Processor
 			{
 				if (response.IsSuccessStatusCode)
 				{
-					List<AmiiboModel> model = await response.Content.ReadAsAsync<List<AmiiboModel>>();
+					AmiiboModel model = await response.Content.ReadAsAsync<AmiiboModel>();
 					return model;
 				}
 				else
@@ -31,13 +30,13 @@ namespace AmiiPedia.Processor
 				}
 			}
 		}
-		public async Task<AmiiboModel> LoadAmiibo(string parameter, string name)
+		public static async Task<Amiibo> LoadAmiibo(string parameter, string name)
 		{
 			string url = "";
 
 			if(parameter != null && name != null)
 			{
-				url = $"/{baseUrl}?{parameter}={name}";
+				url = $"{baseUrl}?{parameter}={name}";
 			}
 			else
 			{
@@ -48,7 +47,7 @@ namespace AmiiPedia.Processor
 			{
 				if (response.IsSuccessStatusCode)
 				{
-					AmiiboModel model = await response.Content.ReadAsAsync<AmiiboModel>();
+					Amiibo model = await response.Content.ReadAsAsync<Amiibo>();
 					return model;
 				}
 				else
