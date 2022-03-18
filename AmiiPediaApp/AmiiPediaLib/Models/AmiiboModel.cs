@@ -8,11 +8,53 @@ namespace AmiiPedia.Models
 {
 	public class AmiiboModel
 	{
+		/// <summary>
+		/// List of amiibos
+		/// </summary>
 		public Amiibo[] Amiibo { get; set; }
 
 		public int Length()
 		{
 			return Amiibo.Length;
+		}
+
+		//Returns the franchises in the list and how many amiibos belong to each
+		public List<(string franchise, int count)> GetFranchises() 
+		{
+			if(Amiibo == null)
+			{
+				return null;
+			}
+
+			List<(string franchise, int count)> list = new List<(string franchise,int count)>();
+			int _count = 0;
+			string last = string.Empty;
+
+			foreach(var i in Amiibo)
+			{
+				if(_count == 0)
+				{
+					last = i.GameSeries;
+				}
+
+				if(last == i.GameSeries) //If the GameSeries is still the same, then just add to the counter
+				{
+					_count++;
+				}
+				else //if the game series changed, restart the counting with the new series
+				{
+					list.Add((last,_count));
+					last = i.GameSeries;
+					_count = 1;
+				}
+			}
+
+			return list;
+		}
+
+		public List<Amiibo> GetAmiibosAsList()
+		{
+			return new List<Amiibo>(Amiibo);
 		}
 	}
 
