@@ -147,6 +147,7 @@ namespace AmiiPedia
 				AmiiboImages[i].Source = new BitmapImage(
 					  new Uri(source[i].Image, UriKind.Absolute)
 					  );
+				AmiiboImages[i].ToolTip = source[i].Name;
 
 				ImagesPanel.Children.Add(AmiiboImages[i]);
 			}
