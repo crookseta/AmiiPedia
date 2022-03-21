@@ -54,7 +54,7 @@ namespace AmiiPedia
 		List<Amiibo> SearchedAmiibos = new List<Amiibo>();
 		Amiibo?[] amiibosInPage = new Amiibo[amiibosPerPage];
 		readonly Regex numOnly = new Regex("[^0-9]+");
-		const int amiibosPerPage = 25;
+		const int amiibosPerPage = 90;
 
 		string? lastSearch;
 
@@ -66,6 +66,12 @@ namespace AmiiPedia
 			NotSearching = true;
 		}
 		#region Methods
+		/// <summary>
+		/// Initiates amiibosInPage and AmiiboImages the first time its called.
+		/// Clears the ImagesPanel's children and AmiiboImages.
+		/// Calls the LoadImages method passing amiibosInPage.Length and amiibosInPage
+		/// </summary>
+		/// <returns></returns>
 		private async Task LoadImageArray()
 		{
 			if(amiibosInPage == null)
@@ -76,27 +82,17 @@ namespace AmiiPedia
 
 			ImagesPanel.Children.Clear();
 			AmiiboImages.Clear();
-			for(int i = 0; i < amiibosInPage.Length; i++)
-			{
-				if(amiibosInPage[i] == null)
-				{
-					break;
-				}
 
-				AmiiboImages.Add(new Image());
-				AmiiboImages[i].Height = ImageTemplateParameters().height;
-				AmiiboImages[i].Width = ImageTemplateParameters().width;
-				AmiiboImages[i].MinHeight = ImageTemplateParameters().minheight;
-				AmiiboImages[i].MinWidth = ImageTemplateParameters().minwidth;
-				AmiiboImages[i].Margin = ImageTemplateParameters().margin;
-
-				AmiiboImages[i].Source = new BitmapImage(
-					  new Uri(amiibosInPage[i].Image, UriKind.Absolute)
-					  );
-
-				ImagesPanel.Children.Add(AmiiboImages[i]);
-			}
+			await LoadImages(amiibosInPage.Length, amiibosInPage);
 		}
+		/// <summary>
+		/// If <paramref name="name"/> is different to the last searched name,
+		/// clears the SearchedAmiibos list and AmiibosImages, and
+		/// clears the ImagesPanel's children.
+		/// Populates SearchedAmiibos with amiibos in the specified Game Series
+		/// </summary>
+		/// <param name="name">Game series to search</param>
+		/// <returns></returns>
 		private async Task LoadImageArray(string name)
 		{
 			if (lastSearch != name)
@@ -119,39 +115,38 @@ namespace AmiiPedia
 					}
 					SearchedAmiibos.Add(allAmiibos.Amiibo[i]);
 
-					AmiiboImages.Add(new Image());
+					
 				}
 
-				for(int i = 0; i < SearchedAmiibos.Count; i++)
-				{
-					AmiiboImages[i].Height = ImageTemplateParameters().height;
-					AmiiboImages[i].Width = ImageTemplateParameters().width;
-					AmiiboImages[i].MinHeight = ImageTemplateParameters().minheight;
-					AmiiboImages[i].MinWidth = ImageTemplateParameters().minwidth;
-					AmiiboImages[i].Margin = ImageTemplateParameters().margin;
-
-					AmiiboImages[i].Source = new BitmapImage(new Uri(Amiibos[i].Image, UriKind.Absolute));
-
-					ImagesPanel.Children.Add(AmiiboImages[i]);
-				}
+				await LoadImages(SearchedAmiibos.Count, Amiibos);
 			}
 		}
-
-		private async Task LoadImages(int count)
+		/// <summary>
+		/// Adds images from <paramref name="source"/> to the ImagesPanel
+		/// </summary>
+		/// <param name="count">Max amount of images added</param>
+		/// <param name="source">Source of the images</param>
+		/// <returns></returns>
+		private async Task LoadImages(int count, IList<Amiibo> source)
 		{
-			Uri uriSource;
-
 			for (int i = 0; i < count; i++)
 			{
+				if(source[i] == null)
+				{
+					break;
+				}
+
+				AmiiboImages.Add(GetAmiiboImageTemplate());
+				/*
 				AmiiboImages[i].Height = ImageTemplateParameters().height;
 				AmiiboImages[i].Width = ImageTemplateParameters().width;
 				AmiiboImages[i].MinHeight = ImageTemplateParameters().minheight;
 				AmiiboImages[i].MinWidth = ImageTemplateParameters().minwidth;
 				AmiiboImages[i].Margin = ImageTemplateParameters().margin;
-
-				uriSource = new Uri(Amiibos[i].Image, UriKind.Absolute);
-
-				AmiiboImages[i].Source = new BitmapImage(new Uri(amiibosInPage[i].Image, UriKind.Absolute));
+				*/
+				AmiiboImages[i].Source = new BitmapImage(
+					  new Uri(source[i].Image, UriKind.Absolute)
+					  );
 
 				ImagesPanel.Children.Add(AmiiboImages[i]);
 			}
@@ -164,7 +159,10 @@ namespace AmiiPedia
 
 			return (width, height, minwidth, minheight, margin);
 		}
-
+		/// <summary>
+		/// Populates the amiibos list for the first time or when going back to the home page
+		/// </summary>
+		/// <returns></returns>
 		private async Task InitiateAmiiboList()
 		{
 			//Amiibos = allAmiibos.GetAmiibosAsList();
@@ -183,7 +181,11 @@ namespace AmiiPedia
 			OnAmiiboUpdate();
 			await LoadImageArray();
 		}
-
+		/// <summary>
+		/// Populates the amiibo list with the amiibos that would be shown in the specified page.
+		/// </summary>
+		/// <param name="page"></param>
+		/// <returns></returns>
 		private async Task PopulateAmiiboList(int page)
 		{
 			int indexMult = amiibosPerPage * (page - 1);
@@ -204,11 +206,29 @@ namespace AmiiPedia
 			await LoadImageArray();
 		}
 
+		private Image GetAmiiboImageTemplate()
+		{
+			Image temp = new Image();
+
+			temp.Height = amiiboImagesTemplate.Height;
+			temp.MinHeight = amiiboImagesTemplate.MinHeight;
+			temp.Width = amiiboImagesTemplate.Width;
+			temp.MinWidth = amiiboImagesTemplate.MinWidth;
+			temp.Margin = amiiboImagesTemplate.Margin;
+
+			temp.MouseEnter += amiiboImages_MouseEnter;
+			temp.MouseLeave += amiiboImages_MouseLeave;
+
+			return temp;
+		}
+
 		private bool IsTextAllowed(string text)
 		{
 			return !numOnly.IsMatch(text);
 		}
-
+		/// <summary>
+		/// Its called whenever the list of amiibos is changed
+		/// </summary>
 		private void OnAmiiboUpdate()
 		{
 			pageNumber.Text = CurrentPage.ToString();
@@ -250,7 +270,7 @@ namespace AmiiPedia
 				franchisesPanel.Visibility = Visibility.Visible;
 		}
 		#endregion
-
+		//Event for the WPF components
 		#region WPF Events
 		private async void Window_Loaded(object sender, RoutedEventArgs e)
 		{
@@ -341,6 +361,34 @@ namespace AmiiPedia
 			}
 			OnAmiiboUpdate();
 		}
+
+		private void amiiboImages_MouseEnter(object sender, MouseEventArgs e)
+		{
+			foreach(Image i in ImagesPanel.Children)
+			{
+				if(e.Source == i)
+				{
+					i.OpacityMask = amiiboImagesTemplate.OpacityMask;
+
+					break;
+				}
+			}
+		}
+
+		private void amiiboImages_MouseLeave(object sender, MouseEventArgs e)
+		{
+			foreach (Image i in ImagesPanel.Children)
+			{
+				if (e.Source == i)
+				{
+					i.OpacityMask = null;
+
+					break;
+				}
+			}
+		}
 		#endregion
+
+
 	}
 }
