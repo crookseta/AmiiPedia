@@ -93,33 +93,94 @@ namespace AmiiPedia
 		/// </summary>
 		/// <param name="name">Game series to search</param>
 		/// <returns></returns>
-		private async Task LoadImageArray(string name)
+		private async Task LoadImageArray(string name, Amiibo.Parameter parameter)
 		{
-			if (lastSearch != name)
+			if (lastSearch == name)
 			{
-				NotSearching = false;
-
-				if (SearchedAmiibos != null)
-				{
-					SearchedAmiibos.Clear();
-				}
-				lastSearch = name;
-				ImagesPanel.Children.Clear();
-				AmiiboImages.Clear();
-
-				for (int i = 0; i < allAmiibos.Length(); i++)
-				{
-					if (allAmiibos.Amiibo[i].GameSeries != name)
-					{
-						continue;
-					}
-					SearchedAmiibos.Add(allAmiibos.Amiibo[i]);
-
-					
-				}
-
-				await LoadImages(SearchedAmiibos.Count, Amiibos);
+				return;
 			}
+			if(!allAmiibos.Contains(name, parameter))
+			{
+				return;
+			}
+
+			NotSearching = false;
+
+			if (SearchedAmiibos != null)
+			{
+				SearchedAmiibos.Clear();
+			}
+			lastSearch = name;
+			ImagesPanel.Children.Clear();
+			AmiiboImages.Clear();
+
+			switch (parameter)
+			{
+				case Amiibo.Parameter.AmiiboSeries:
+					for (int i = 0; i < allAmiibos.Length(); i++)
+					{
+						if (allAmiibos.Amiibos[i].AmiiboSeries != name)
+						{
+							continue;
+						}
+						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+					}
+					break;
+				case Amiibo.Parameter.Character:
+					for (int i = 0; i < allAmiibos.Length(); i++)
+					{
+						if (!allAmiibos.Amiibos[i].Character.Contains(name, StringComparison.CurrentCultureIgnoreCase)) //!= name
+						{
+							continue;
+						}
+						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+					}
+					break;
+				case Amiibo.Parameter.GameSeries:
+					for (int i = 0; i < allAmiibos.Length(); i++)
+					{
+						if (allAmiibos.Amiibos[i].GameSeries != name)
+						{
+							continue;
+						}
+						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+					}
+					break;
+				case Amiibo.Parameter.Name:
+					for (int i = 0; i < allAmiibos.Length(); i++)
+					{
+						if (allAmiibos.Amiibos[i].Name != name)
+						{
+							continue;
+						}
+						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+					}
+					break;
+				case Amiibo.Parameter.Type:
+					for (int i = 0; i < allAmiibos.Length(); i++)
+					{
+						if (allAmiibos.Amiibos[i].Type != name)
+						{
+							continue;
+						}
+						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+					}
+					break;
+				default:
+					throw new Exception("Parameter type " + parameter + " not supported.");
+			}
+			/*
+			for (int i = 0; i < allAmiibos.Length(); i++)
+			{
+				if (allAmiibos.Amiibos[i].GameSeries != name)
+				{
+					
+					continue;
+				}
+				SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+			}
+			*/
+			await LoadImages(SearchedAmiibos.Count, Amiibos);
 		}
 		/// <summary>
 		/// Adds images from <paramref name="source"/> to the ImagesPanel
@@ -270,6 +331,13 @@ namespace AmiiPedia
 			else
 				franchisesPanel.Visibility = Visibility.Visible;
 		}
+
+		void SearchButtonsVisibility(bool visible)
+		{
+			searchBtn.IsEnabled = visible;
+			searchBox.IsEnabled = visible;
+			
+		}
 		#endregion
 		//Event for the WPF components
 		#region WPF Events
@@ -282,14 +350,22 @@ namespace AmiiPedia
 			homeBtn.IsEnabled = true;
 			PageButtonsVisibility(true);
 			SectionButtonsVisibility(true);
+			SearchButtonsVisibility(true);
 		}
-		/*
+		
 		private async void searchBtn_Click(object sender, RoutedEventArgs e)
 		{
-			NotSearching = false;
-			await LoadImageArray(searchBox.Text);
+			await LoadImageArray(searchBox.Text, Amiibo.Parameter.Character);
 		}
-		*/
+
+		private async void searchBox_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Enter)
+			{
+				await LoadImageArray(searchBox.Text, Amiibo.Parameter.Character);
+			}
+		}
+
 		private void pageNumber_PreviewTextInput(object sender, TextCompositionEventArgs e)
 		{
 			e.Handled = !IsTextAllowed(e.Text);
@@ -355,7 +431,7 @@ namespace AmiiPedia
 				{
 					NotSearching = false;
 					CurrentPage = 1;
-					await LoadImageArray(i.Content.ToString());
+					await LoadImageArray(i.Content.ToString(), Amiibo.Parameter.GameSeries);
 					await PopulateAmiiboList(1);
 					break;
 				}
@@ -388,8 +464,9 @@ namespace AmiiPedia
 				}
 			}
 		}
+
 		#endregion
 
-
+		
 	}
 }

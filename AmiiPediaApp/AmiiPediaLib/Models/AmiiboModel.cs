@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace AmiiPedia.Models
 {
@@ -11,17 +12,18 @@ namespace AmiiPedia.Models
 		/// <summary>
 		/// List of amiibos
 		/// </summary>
-		public Amiibo[] Amiibo { get; set; }
+		[JsonProperty("amiibo", Required = Required.Always)]
+		public Amiibo[] Amiibos { get; set; }
 
 		public int Length()
 		{
-			return Amiibo.Length;
+			return Amiibos.Length;
 		}
 
 		//Returns the franchises in the list and how many amiibos belong to each
 		public List<(string franchise, int count)> GetFranchises() 
 		{
-			if(Amiibo == null)
+			if(Amiibos == null)
 			{
 				return null;
 			}
@@ -30,7 +32,7 @@ namespace AmiiPedia.Models
 			int _count = 0;
 			string last = string.Empty;
 
-			foreach(var i in Amiibo)
+			foreach(var i in Amiibos)
 			{
 				if(_count == 0)
 				{
@@ -54,44 +56,104 @@ namespace AmiiPedia.Models
 
 		public List<Amiibo> GetAmiibosAsList()
 		{
-			return new List<Amiibo>(Amiibo);
+			return new List<Amiibo>(Amiibos);
+		}
+
+		public bool Contains(string name, Amiibo.Parameter parameter)
+		{
+			foreach(var i in Amiibos)
+			{
+				switch (parameter)
+				{
+					case Amiibo.Parameter.AmiiboSeries:
+						if(i.AmiiboSeries.ToUpper().Contains(name.ToUpper()))
+						{
+							return true;
+						}
+						break;
+					case Amiibo.Parameter.Character:
+						if (i.Character.ToUpper().Contains(name.ToUpper()))
+						{
+							return true;
+						}
+						break;
+					case Amiibo.Parameter.GameSeries:
+						if (i.GameSeries.ToUpper().Contains(name.ToUpper()))
+						{
+							return true;
+						}
+						break;
+					case Amiibo.Parameter.Name:
+						if (i.Name.ToUpper().Contains(name.ToUpper()))
+						{
+							return true;
+						}
+						break;
+					case Amiibo.Parameter.Type:
+						if (i.Type.ToUpper().Contains(name.ToUpper()))
+						{
+							return true;
+						}
+						break;
+				}
+			}
+
+			return false;
 		}
 	}
 
 	public class Amiibo
 	{
 		/// <summary>
-		/// Franchise the Amiibo represents
+		/// Franchise the Amiibos represents
 		/// </summary>
+		[JsonProperty("amiiboSeries")]
 		public string AmiiboSeries { get; set; }
 		/// <summary>
-		/// The videogame character represented in the Amiibo
+		/// The videogame character represented in the Amiibos
 		/// </summary>
+		[JsonProperty("character")]
 		public string Character { get; set; }
 		/// <summary>
 		/// Videogame series where the character represented in the amiibo comes from
 		/// </summary>
+		[JsonProperty("gameSeries")]
 		public string GameSeries { get; set; }
 		/// <summary>
-		/// The Amiibo's image url
+		/// The Amiibos's image url
 		/// </summary>
+		[JsonProperty("image")]
 		public string Image { get; set; }
 		/// <summary>
-		/// Amiibo's name
+		/// Amiibos's name
 		/// </summary>
+		[JsonProperty("name")]
 		public string Name { get; set; }
 		/// <summary>
-		/// Amiibo's release dates in:
+		/// Amiibos's release dates in:
 		/// Australia(AU),
 		/// Europe(EU),
 		/// Japan(JP),
 		/// North America(NA)
 		/// </summary>
+		[JsonProperty("release")]
 		public Release Release { get; set; }
 		/// <summary>
-		/// Type of Amiibo(Figure, card, band, etc.)
+		/// Type of Amiibos(Figure, card, band, etc.)
 		/// </summary>
+		[JsonProperty("type")]
 		public string Type { get; set; }
+
+		public enum Parameter
+		{
+			AmiiboSeries,
+			Character,
+			GameSeries,
+			Image,
+			Name,
+			Release,
+			Type
+		}
 	}
 
 	public class Release
