@@ -49,12 +49,12 @@
         </Button>
         <Rectangle Grid.ColumnSpan="3" Grid.Column="1" Grid.RowSpan="2" Fill="#FFFF0009"/>
         
-        <DockPanel  Grid.Column="1" Grid.Row="1">
+        <DockPanel x:Name="searchDock"  Grid.Column="1" Grid.Row="1">
             <Button x:Name="searchBtn" DockPanel.Dock="Right" Width="40" Content="Search"
                     Cursor="Hand" IsEnabled="False" Click="searchBtn_Click"/>
-            <TextBox x:Name="searchBox" Grid.Row="1" Grid.Column="1" 
-                     Height="auto" Width="230" DockPanel.Dock="Right" HorizontalAlignment="Right" 
-                     FontSize="14" TextAlignment="Right" KeyDown="searchBox_KeyDown"/>
+            <TextBox x:Name="searchBox" Grid.Row="1" Grid.Column="1" MaxLines="1"
+                     Height="{Binding ElementName=searchDock, Path=ActualHeight}" Width="230" DockPanel.Dock="Right" 
+                     HorizontalAlignment="Right" FontSize="23" TextAlignment="Right" KeyDown="searchBox_KeyDown"/>
         </DockPanel>
         
         <ScrollViewer Grid.Row="2" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
