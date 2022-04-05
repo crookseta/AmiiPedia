@@ -62,6 +62,28 @@ namespace AmiiPedia
 			NotSearching = true;
 		}
 		#region Methods
+		private async Task ProcessAmiibos()
+		{
+			try
+			{
+				allAmiibos = await AmiiboProcessor.LoadAmiibos();
+			}
+			catch (ApiConnectionException ex)
+			{
+				var mbox = MessageBox.Show(this,
+					   $"There has been an error connecting to the API \n{ex.Message}\n{ex.InnerException.Message}",
+						"API Error",
+						 MessageBoxButton.OK, MessageBoxImage.Error);
+				if (mbox == MessageBoxResult.OK)
+				{
+					Application.Current.Shutdown();
+				}
+				if(mbox == MessageBoxResult.None)
+				{
+					Application.Current.Shutdown();
+				}
+			}
+		}
 		/// <summary>
 		/// Initiates amiibosInPage and AmiiboImages the first time its called.
 		/// Clears the ImagesPanel's children and AmiiboImages.
@@ -207,6 +229,7 @@ namespace AmiiPedia
 					  new Uri(source[i].Image, UriKind.Absolute)
 					  );
 				AmiiboImages[i].ToolTip = source[i].Name;
+				AmiiboImages[i].Tag = source[i];
 
 				ImagesPanel.Children.Add(AmiiboImages[i]);
 			}
@@ -278,6 +301,7 @@ namespace AmiiPedia
 
 			temp.MouseEnter += amiiboImages_MouseEnter;
 			temp.MouseLeave += amiiboImages_MouseLeave;
+			temp.MouseLeftButtonDown += amiiboImages_MouseLeftButtonDown;
 
 			return temp;
 		}
@@ -341,7 +365,8 @@ namespace AmiiPedia
 		#region WPF Events
 		private async void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			allAmiibos = await AmiiboProcessor.LoadAmiibos();
+			
+			await ProcessAmiibos();
 
 			await InitiateAmiiboList();
 
@@ -460,6 +485,19 @@ namespace AmiiPedia
 				if (e.Source == i)
 				{
 					i.OpacityMask = null;
+
+					break;
+				}
+			}
+		}
+
+		private void amiiboImages_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			foreach (Image i in ImagesPanel.Children)
+			{
+				if (e.Source == i)
+				{
+					i.Tag.ToString();
 
 					break;
 				}

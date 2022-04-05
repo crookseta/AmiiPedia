@@ -9,17 +9,23 @@ namespace AmiiPedia.Models
 		/// <summary>
 		/// List of amiibos
 		/// </summary>
+		//[JsonProperty("amiibo", Required = Required.Always)]
+		//public Amiibo[] Amiibos { get; set; }
 		[JsonProperty("amiibo", Required = Required.Always)]
-		public Amiibo[] Amiibos { get; set; }
+		public List<Amiibo> Amiibos { get; set; }
 
 		public Amiibo this[int index]
 		{
 			get => Amiibos[index];
 		}
+		public AmiiboModel()
+		{
+			Amiibos = new List<Amiibo>();
+		}
 
 		public int Length()
 		{
-			return Amiibos.Length;
+			return Amiibos.Count;
 		}
 
 		//Returns the franchises in the list and how many amiibos belong to each
@@ -102,6 +108,14 @@ namespace AmiiPedia.Models
 
 			return false;
 		}
+
+		public static AmiiboModel operator +(AmiiboModel a, AmiiboModel b)
+		{
+			AmiiboModel c = new AmiiboModel();
+			c.Amiibos.AddRange(a.Amiibos);
+			c.Amiibos.AddRange(b.Amiibos);
+			return c;
+		}
 	}
 
 	public class Amiibo
@@ -121,6 +135,12 @@ namespace AmiiPedia.Models
 		/// </summary>
 		[JsonProperty("gameSeries")]
 		public string GameSeries { get; set; }
+		[JsonProperty("games3DS")]
+		public Games[] Nintendo3ds { get; set; }
+		[JsonProperty("gamesSwitch")]
+		public Games[] NintendoSwitch { get; set; }
+		[JsonProperty("gamesWiiU")]
+		public Games[] NintendoWiiU { get; set; }
 		/// <summary>
 		/// The Amiibos's image url
 		/// </summary>
@@ -291,4 +311,25 @@ namespace AmiiPedia.Models
 			return date;
 		}
 	}
+
+	public class Games
+	{
+		[JsonProperty("amiiboUsage", Required = Required.Always)]
+		public AmiiboUsage[] Usage { get; set; }
+		[JsonProperty("gameID", Required = Required.Always)]
+		public string[] Id { get; set; }
+		[JsonProperty("gameName", Required = Required.Always)]
+		public string Name { get; set; }
+
+		public class AmiiboUsage
+		{
+			[JsonProperty("Usage", Required = Required.Always)]
+			public string Usage { get; set; }
+
+			[JsonProperty("write", Required = Required.Always)]
+			public bool Write { get; set; }
+		}
+	}
+
+	
 }

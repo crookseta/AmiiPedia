@@ -20,4 +20,11 @@ namespace AmiiPedia.Api
 			ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 		}
 	}
+
+	public class ApiConnectionException : Exception
+	{
+		public ApiConnectionException() : base() { }
+		public ApiConnectionException(string message) : base(message) { }
+		public ApiConnectionException(string message, Exception internalException) : base(message, internalException) { }
+	}
 }
