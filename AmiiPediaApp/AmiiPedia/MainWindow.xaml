@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AmiiPedia"
         xmlns:ex="clr-namespace:AmiiPedia.Extensions"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" MinWidth="500" MinHeight="300">
+        Title="MainWindow" Height="450" Width="800" MinWidth="800" MinHeight="400">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -60,7 +60,7 @@
         <ScrollViewer Grid.Row="2" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
             <WrapPanel x:Name="franchisesPanel" ItemHeight="30" ItemWidth="{Binding ElementName=franchiseRectangle, Path=ActualWidth}" 
                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Orientation="Vertical" Visibility="Hidden">
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Animal Crossing" 
+                <!--<ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Animal Crossing" 
                                  FontSize="20" Foreground="White" FontWeight="Bold" 
                                  BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
                                  Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
@@ -227,30 +227,20 @@
                 <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Yu-Gi-Oh!" 
                                  FontSize="20" Foreground="White" FontWeight="Bold" 
                                  BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
+                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>-->
             </WrapPanel>
         </ScrollViewer>
 
-        <ScrollViewer Grid.Row="2" Grid.Column="1"
-                      VerticalScrollBarVisibility="Auto">
-            <WrapPanel x:Name="ImagesPanel">
-
-            </WrapPanel>
-        </ScrollViewer>
-
-        <Button x:Name="prevBtn" Content="Previous" Grid.Row="3" Grid.Column="1"
-                VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,70,0"
-                Click="prevBtn_Click" Visibility="Hidden"/>
-        <TextBox x:Name="pageNumber" Grid.Row="3" Grid.Column="1" Text="1"
-                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="20" FontSize="14"
-                 PreviewTextInput="pageNumber_PreviewTextInput" KeyDown="pageNumber_KeyDown"
-                 TextAlignment="Right" Visibility="Hidden"/>
-        <Button x:Name="nextBtn" Content="Next" Grid.Row="3" Grid.Column="1"
-                VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0"
-                Click="nextBtn_Click" Visibility="Hidden"/>
-
+        <!--#region Templates -->
         <Image x:Name="amiiboImagesTemplate" Visibility="Collapsed"
                        Height="90" Width="50" MinHeight="80" MinWidth="50" Margin="20,20,20,20" OpacityMask="#8C000000"
                         />
+        <ex:SimpleButton x:Name="franchiseButtonTemplate" VerticalAlignment="Center" HorizontalContentAlignment="Left" Visibility="Collapsed" 
+                                 FontSize="20" Foreground="White" FontWeight="Bold" 
+                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
+                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
+        <!--#endregion-->
+
+        <Frame x:Name="mainFrame" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

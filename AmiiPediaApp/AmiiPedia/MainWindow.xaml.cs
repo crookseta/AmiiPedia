@@ -1,4 +1,5 @@
 ﻿using AmiiPedia.Api;
+using AmiiPedia.Extensions;
 using AmiiPedia.Models;
 using AmiiPedia.Processor;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace AmiiPedia
@@ -17,6 +19,7 @@ namespace AmiiPedia
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		public static MainWindow Instance { get; private set; }
 		public int MaxPage
 		{
 			get
@@ -26,12 +29,13 @@ namespace AmiiPedia
 				return Convert.ToInt32(i);
 			}
 		}
+		public List<string> Franchises;
 
-		private int CurrentPage = 1;
 		private List<Image> AmiiboImages = new List<Image>();
 		private bool NotSearching = true;
 		private AmiiboModel allAmiibos = new AmiiboModel();
 
+		private AmiiboDirectoryPage _amiiboDirectory;
 		private List<Amiibo?> Amiibos
 		{
 			get
@@ -49,7 +53,6 @@ namespace AmiiPedia
 
 		private List<Amiibo> SearchedAmiibos = new List<Amiibo>();
 		private Amiibo?[] amiibosInPage = new Amiibo[amiibosPerPage];
-		private readonly Regex numOnly = new Regex("[^0-9]+");
 		private const int amiibosPerPage = 90;
 		private string? lastSearch;
 
@@ -57,7 +60,7 @@ namespace AmiiPedia
 		{
 			InitializeComponent();
 			Helper.InitializeClient();
-
+			Instance = this;
 
 			NotSearching = true;
 		}
@@ -71,7 +74,7 @@ namespace AmiiPedia
 			catch (ApiConnectionException ex)
 			{
 				var mbox = MessageBox.Show(this,
-					   $"There has been an error connecting to the API \n{ex.Message}\n{ex.InnerException.Message}",
+					   $"There has been an error connecting to the API \n{ex.Message}\n{ex.InnerException?.Message}",
 						"API Error",
 						 MessageBoxButton.OK, MessageBoxImage.Error);
 				if (mbox == MessageBoxResult.OK)
@@ -98,7 +101,6 @@ namespace AmiiPedia
 				AmiiboImages = new List<Image>(amiibosInPage.Length);
 			}
 
-			ImagesPanel.Children.Clear();
 			AmiiboImages.Clear();
 
 			await LoadImages(amiibosInPage.Length, amiibosInPage);
@@ -111,96 +113,85 @@ namespace AmiiPedia
 		/// </summary>
 		/// <param name="name">Game series to search</param>
 		/// <returns></returns>
-		private async Task LoadImageArray(string name, Amiibo.Parameter parameter)
+		private async Task SearchAmiibos(string name, Amiibo.Parameter parameter)
 		{
 			if (lastSearch == name)
 			{
 				return;
 			}
-			if (!allAmiibos.Contains(name, parameter))
+			await Task.Run(() =>
 			{
-				return;
-			}
-
-			NotSearching = false;
-			CurrentPage = 1;
-
-			if (SearchedAmiibos != null)
-			{
-				SearchedAmiibos.Clear();
-			}
-			lastSearch = name;
-			ImagesPanel.Children.Clear();
-			AmiiboImages.Clear();
-
-			switch (parameter)
-			{
-				case Amiibo.Parameter.AmiiboSeries:
-					for (int i = 0; i < allAmiibos.Length(); i++)
-					{
-						if (allAmiibos.Amiibos[i].AmiiboSeries != name)
-						{
-							continue;
-						}
-						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
-					}
-					break;
-				case Amiibo.Parameter.Character:
-					for (int i = 0; i < allAmiibos.Length(); i++)
-					{
-						if (!allAmiibos.Amiibos[i].Character.Contains(name, StringComparison.CurrentCultureIgnoreCase)) //!= name
-						{
-							continue;
-						}
-						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
-					}
-					break;
-				case Amiibo.Parameter.GameSeries:
-					for (int i = 0; i < allAmiibos.Length(); i++)
-					{
-						if (allAmiibos.Amiibos[i].GameSeries != name)
-						{
-							continue;
-						}
-						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
-					}
-					break;
-				case Amiibo.Parameter.Name:
-					for (int i = 0; i < allAmiibos.Length(); i++)
-					{
-						if (allAmiibos.Amiibos[i].Name != name)
-						{
-							continue;
-						}
-						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
-					}
-					break;
-				case Amiibo.Parameter.Type:
-					for (int i = 0; i < allAmiibos.Length(); i++)
-					{
-						if (allAmiibos.Amiibos[i].Type != name)
-						{
-							continue;
-						}
-						SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
-					}
-					break;
-				default:
-					throw new Exception("Parameter type " + parameter + " not supported.");
-			}
-			/*
-			for (int i = 0; i < allAmiibos.Length(); i++)
-			{
-				if (allAmiibos.Amiibos[i].GameSeries != name)
+				if (!allAmiibos.Contains(name, parameter))
 				{
-					
-					continue;
+					return;
 				}
-				SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
-			}
-			*/
-			await LoadImages(SearchedAmiibos.Count, Amiibos);
-			await PopulateAmiiboList(1);
+
+				NotSearching = false;
+
+				if (SearchedAmiibos != null)
+				{
+					SearchedAmiibos.Clear();
+				}
+				lastSearch = name;
+				AmiiboImages.Clear();
+
+				switch (parameter)
+				{
+					case Amiibo.Parameter.AmiiboSeries:
+						for (int i = 0; i < allAmiibos.Length(); i++)
+						{
+							if (allAmiibos.Amiibos[i].AmiiboSeries != name)
+							{
+								continue;
+							}
+							SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+						}
+						break;
+					case Amiibo.Parameter.Character:
+						for (int i = 0; i < allAmiibos.Length(); i++)
+						{
+							if (!allAmiibos.Amiibos[i].Character.Contains(name, StringComparison.CurrentCultureIgnoreCase)) //!= name
+							{
+								continue;
+							}
+							SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+						}
+						break;
+					case Amiibo.Parameter.GameSeries:
+						for (int i = 0; i < allAmiibos.Length(); i++)
+						{
+							if (allAmiibos.Amiibos[i].GameSeries != name)
+							{
+								continue;
+							}
+							SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+						}
+						break;
+					case Amiibo.Parameter.Name:
+						for (int i = 0; i < allAmiibos.Length(); i++)
+						{
+							if (allAmiibos.Amiibos[i].Name != name)
+							{
+								continue;
+							}
+							SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+						}
+						break;
+					case Amiibo.Parameter.Type:
+						for (int i = 0; i < allAmiibos.Length(); i++)
+						{
+							if (allAmiibos.Amiibos[i].Type != name)
+							{
+								continue;
+							}
+							SearchedAmiibos?.Add(allAmiibos.Amiibos[i]);
+						}
+						break;
+					default:
+						throw new Exception("Parameter type " + parameter + " not supported.");
+				}
+			});
+			mainFrame.Content = new AmiiboDirectoryPage(SearchedAmiibos);
 		}
 		/// <summary>
 		/// Adds images from <paramref name="source"/> to the ImagesPanel
@@ -217,133 +208,51 @@ namespace AmiiPedia
 					break;
 				}
 
-				AmiiboImages.Add(GetAmiiboImageTemplate());
-				/*
-				AmiiboImages[i].Height = ImageTemplateParameters().height;
-				AmiiboImages[i].Width = ImageTemplateParameters().width;
-				AmiiboImages[i].MinHeight = ImageTemplateParameters().minheight;
-				AmiiboImages[i].MinWidth = ImageTemplateParameters().minwidth;
-				AmiiboImages[i].Margin = ImageTemplateParameters().margin;
-				*/
 				AmiiboImages[i].Source = new BitmapImage(
 					  new Uri(source[i].Image, UriKind.Absolute)
 					  );
 				AmiiboImages[i].ToolTip = source[i].Name;
 				AmiiboImages[i].Tag = source[i];
-
-				ImagesPanel.Children.Add(AmiiboImages[i]);
 			}
 		}
 
-		private (float width, float height, float minwidth, float minheight, Thickness margin) ImageTemplateParameters()
+		private async Task LoadFranchisesPanel()
 		{
-			float width = 50f, height = 90, minwidth = 50, minheight = 80;
-			Thickness margin = new Thickness(20, 20, 20, 20);
-
-			return (width, height, minwidth, minheight, margin);
-		}
-		/// <summary>
-		/// Populates the amiibos list for the first time or when going back to the home page
-		/// </summary>
-		/// <returns></returns>
-		private async Task InitiateAmiiboList()
-		{
-			//Amiibos = allAmiibos.GetAmiibosAsList();
-
-			for (int i = 0, j = 0; i < amiibosPerPage; i++)
+			Franchises = await AmiiboProcessor.LoadFranchises();
+			franchisesPanel.Children.Clear();
+			for(int i = 0; i < Franchises.Count; i++)
 			{
-				if (i >= Amiibos.Count)
-				{
-					break;
-				}
+				var btn = GetSimpleButtonTemplate();
 
-				amiibosInPage[j] = Amiibos[i];
+				btn.Content = Franchises[i];
 
-				j++;
+				franchisesPanel.Children.Add(btn);
 			}
-			OnAmiiboUpdate();
-			await LoadImageArray();
-		}
-		/// <summary>
-		/// Populates the amiibo list with the amiibos that would be shown in the specified page.
-		/// </summary>
-		/// <param name="page"></param>
-		/// <returns></returns>
-		private async Task PopulateAmiiboList(int page)
-		{
-			int indexMult = amiibosPerPage * (page - 1);
-			int indexLimit = amiibosPerPage * page;
-			for (int i = indexMult, j = 0; i < indexLimit; i++)
-			{
-				if (i >= Amiibos.Count)
-				{
-					amiibosInPage[j] = null;
-					continue;
-				}
-
-				amiibosInPage[j] = Amiibos[i];
-
-				j++;
-			}
-			OnAmiiboUpdate();
-			await LoadImageArray();
 		}
 
-		private Image GetAmiiboImageTemplate()
+		private SimpleButton GetSimpleButtonTemplate()
 		{
-			Image temp = new Image();
+			SimpleButton temp = new SimpleButton();
 
-			temp.Height = amiiboImagesTemplate.Height;
-			temp.MinHeight = amiiboImagesTemplate.MinHeight;
-			temp.Width = amiiboImagesTemplate.Width;
-			temp.MinWidth = amiiboImagesTemplate.MinWidth;
-			temp.Margin = amiiboImagesTemplate.Margin;
-
-			temp.MouseEnter += amiiboImages_MouseEnter;
-			temp.MouseLeave += amiiboImages_MouseLeave;
-			temp.MouseLeftButtonDown += amiiboImages_MouseLeftButtonDown;
+			temp.VerticalAlignment = VerticalAlignment.Center;
+			temp.HorizontalContentAlignment = HorizontalAlignment.Left;
+			temp.FontSize = 20;
+			temp.Foreground = franchiseButtonTemplate.Foreground;
+			temp.FontWeight = FontWeights.Bold;
+			temp.HoverColor = franchiseButtonTemplate.HoverColor;
+			temp.Style = franchiseButtonTemplate.Style;
+			temp.Click += franchiseBtn_Click;
 
 			return temp;
-		}
-
-		private bool IsTextAllowed(string text)
-		{
-			return !numOnly.IsMatch(text);
 		}
 		/// <summary>
 		/// Its called whenever the list of amiibos is changed
 		/// </summary>
 		private void OnAmiiboUpdate()
 		{
-			pageNumber.Text = CurrentPage.ToString();
-
-			if (Amiibos.Count <= amiibosPerPage)
-			{
-				PageButtonsVisibility(false);
-			}
-			else
-			{
-				PageButtonsVisibility(true);
-			}
+			_amiiboDirectory?.Update();
 
 			searchBox.Text = string.Empty;
-		}
-
-		private void PageButtonsVisibility(bool visible)
-		{
-			if (visible == false)
-			{
-				prevBtn.Visibility = Visibility.Hidden;
-				pageNumber.Visibility = Visibility.Hidden;
-				nextBtn.Visibility = Visibility.Hidden;
-			}
-			else
-			{
-				prevBtn.Visibility = Visibility.Visible;
-				pageNumber.Visibility = Visibility.Visible;
-				nextBtn.Visibility = Visibility.Visible;
-			}
-
 		}
 
 		private void SectionButtonsVisibility(bool visible)
@@ -365,20 +274,22 @@ namespace AmiiPedia
 		#region WPF Events
 		private async void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			await LoadFranchisesPanel();
 			
 			await ProcessAmiibos();
 
-			await InitiateAmiiboList();
+			_amiiboDirectory = new AmiiboDirectoryPage(allAmiibos.Amiibos);
 
 			homeBtn.IsEnabled = true;
-			PageButtonsVisibility(true);
 			SectionButtonsVisibility(true);
 			SearchButtonsVisibility(true);
+
+			mainFrame.Content = _amiiboDirectory;
 		}
 
 		private async void searchBtn_Click(object sender, RoutedEventArgs e)
 		{
-			await LoadImageArray(searchBox.Text, Amiibo.Parameter.Character);
+			await SearchAmiibos(searchBox.Text, Amiibo.Parameter.Character);
 
 			OnAmiiboUpdate();
 		}
@@ -387,65 +298,20 @@ namespace AmiiPedia
 		{
 			if (e.Key == Key.Enter)
 			{
-				await LoadImageArray(searchBox.Text, Amiibo.Parameter.Character);
+				await SearchAmiibos(searchBox.Text, Amiibo.Parameter.Character);
 
 				OnAmiiboUpdate();
 			}
 		}
 
-		private void pageNumber_PreviewTextInput(object sender, TextCompositionEventArgs e)
+		private void homeBtn_Click(object sender, RoutedEventArgs e)
 		{
-			e.Handled = !IsTextAllowed(e.Text);
-		}
-
-		private async void pageNumber_KeyDown(object sender, KeyEventArgs e)
-		{
-			var page = Convert.ToInt32(pageNumber.Text);
-			if (e.Key == Key.Enter && page > 0)
-			{
-				if (page > MaxPage)
-				{
-					page = MaxPage;
-				}
-				CurrentPage = page;
-				await PopulateAmiiboList(page);
-			}
-			OnAmiiboUpdate();
-		}
-
-		private async void nextBtn_Click(object sender, RoutedEventArgs e)
-		{
-			int page = Convert.ToInt32(CurrentPage) + 1;
-			if (page <= MaxPage)
-			{
-				CurrentPage = page;
-				await PopulateAmiiboList(page);
-			}
-			OnAmiiboUpdate();
-		}
-
-		private async void prevBtn_Click(object sender, RoutedEventArgs e)
-		{
-			int page = Convert.ToInt32(CurrentPage) - 1;
-			if (page > 0)
-			{
-				CurrentPage = page;
-				await PopulateAmiiboList(page);
-			}
-			OnAmiiboUpdate();
-		}
-
-		private async void homeBtn_Click(object sender, RoutedEventArgs e)
-		{
-			if (!NotSearching)
+			if(mainFrame.Content != _amiiboDirectory)
 			{
 				lastSearch = null;
-				CurrentPage = 1;
 				NotSearching = true;
 
-				PageButtonsVisibility(true);
-
-				await InitiateAmiiboList();
+				mainFrame.Content = _amiiboDirectory;
 				OnAmiiboUpdate();
 			}
 		}
@@ -456,56 +322,12 @@ namespace AmiiPedia
 			{
 				if (e.Source == i)
 				{
-					//CurrentPage = 1;
-					await LoadImageArray(i.Content.ToString(), Amiibo.Parameter.GameSeries);
-					//await PopulateAmiiboList(1);
+					await SearchAmiibos(i.Content.ToString(), Amiibo.Parameter.GameSeries);
 					break;
 				}
 			}
 			OnAmiiboUpdate();
 		}
-
-		private void amiiboImages_MouseEnter(object sender, MouseEventArgs e)
-		{
-			foreach (Image i in ImagesPanel.Children)
-			{
-				if (e.Source == i)
-				{
-					i.OpacityMask = amiiboImagesTemplate.OpacityMask;
-
-					break;
-				}
-			}
-		}
-
-		private void amiiboImages_MouseLeave(object sender, MouseEventArgs e)
-		{
-			foreach (Image i in ImagesPanel.Children)
-			{
-				if (e.Source == i)
-				{
-					i.OpacityMask = null;
-
-					break;
-				}
-			}
-		}
-
-		private void amiiboImages_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			foreach (Image i in ImagesPanel.Children)
-			{
-				if (e.Source == i)
-				{
-					i.Tag.ToString();
-
-					break;
-				}
-			}
-		}
-
 		#endregion
-
-
 	}
 }

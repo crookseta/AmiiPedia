@@ -11,7 +11,7 @@ namespace AmiiPedia.Api
 	public class Helper
 	{
 		public static HttpClient ApiClient { get; set; }
-		public static string BaseAddress { get; } = "https://www.amiiboapi.com/api/amiibo/";
+		public static string BaseAddress { get; } = "https://www.amiiboapi.com/api/";
 
 		public static void InitializeClient()
 		{

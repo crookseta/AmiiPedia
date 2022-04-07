@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace AmiiPedia.Models
 {
@@ -120,6 +121,10 @@ namespace AmiiPedia.Models
 
 	public class Amiibo
 	{
+		private Games[] _nintendo3ds;
+		private Games[] _nintendoSwitch;
+		private Games[] _nintendoWiiU;
+
 		/// <summary>
 		/// Franchise the Amiibos represents
 		/// </summary>
@@ -135,12 +140,48 @@ namespace AmiiPedia.Models
 		/// </summary>
 		[JsonProperty("gameSeries")]
 		public string GameSeries { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
 		[JsonProperty("games3DS")]
-		public Games[] Nintendo3ds { get; set; }
+		public Games[] Nintendo3ds { get => _nintendo3ds; 
+			set 
+			{
+				_nintendo3ds = value;
+				foreach(var i in _nintendo3ds)
+				{
+					i.Platform = "Nintendo 3DS";
+				}
+			} 
+		}
+		/// <summary>
+		/// 
+		/// </summary>
 		[JsonProperty("gamesSwitch")]
-		public Games[] NintendoSwitch { get; set; }
+		public Games[] NintendoSwitch { get => _nintendoSwitch;
+			set
+			{
+				_nintendoSwitch = value;
+				foreach (var i in _nintendoSwitch)
+				{
+					i.Platform = "Nintendo Switch";
+				}
+			}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
 		[JsonProperty("gamesWiiU")]
-		public Games[] NintendoWiiU { get; set; }
+		public Games[] NintendoWiiU { get => _nintendoWiiU;
+			set
+			{
+				_nintendoWiiU = value;
+				foreach (var i in _nintendoWiiU)
+				{
+					i.Platform = "Nintendo Wii U";
+				}
+			}
+		}
 		/// <summary>
 		/// The Amiibos's image url
 		/// </summary>
@@ -165,6 +206,15 @@ namespace AmiiPedia.Models
 		/// </summary>
 		[JsonProperty("type")]
 		public string Type { get; set; }
+
+		public Games[] GetGames()
+		{
+			List<Games> games = new List<Games>();
+			games.AddRange(Nintendo3ds);
+			games.AddRange(NintendoSwitch);
+			games.AddRange(NintendoWiiU);
+			return games.ToArray();
+		}
 
 		public enum Parameter
 		{
@@ -320,6 +370,8 @@ namespace AmiiPedia.Models
 		public string[] Id { get; set; }
 		[JsonProperty("gameName", Required = Required.Always)]
 		public string Name { get; set; }
+		public string Platform { get; set; }
+		public string UsageString { get => GetUsageString(); }
 
 		public class AmiiboUsage
 		{
@@ -329,7 +381,17 @@ namespace AmiiPedia.Models
 			[JsonProperty("write", Required = Required.Always)]
 			public bool Write { get; set; }
 		}
-	}
 
-	
+		public string GetUsageString()
+		{
+			StringBuilder builder = new StringBuilder();
+
+			foreach(var i in Usage)
+			{
+				builder.Append($"-{i.Usage}");
+			}
+
+			return builder.ToString();
+		}
+	}
 }

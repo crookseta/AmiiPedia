@@ -15,10 +15,39 @@ namespace AmiiPedia.Processor
 	public class AmiiboProcessor
 	{
 		private static readonly string _baseUrl = Helper.BaseAddress;
+
+		public static async Task<List<string>> LoadFranchises()
+		{
+			string url = _baseUrl + "gameseries/";
+
+			try
+			{
+				AmiiboGameSeriesModel model = new AmiiboGameSeriesModel();
+				var gameseries = await Helper.ApiClient.GetAsync(url, HttpCompletionOption.ResponseContentRead);
+
+				using(var body = gameseries.Content)
+				{
+					if (gameseries.IsSuccessStatusCode)
+					{
+						model = await body.ReadAsAsync<AmiiboGameSeriesModel>();
+						return model.GetFranchises();
+					}
+					else
+					{
+						throw new Exception(gameseries.ReasonPhrase);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new ApiConnectionException("Error while connecting to API", ex);
+			}
+		}
+
 		public static async Task<AmiiboModel> LoadAmiibos()
 		{
-			string urlFigures = _baseUrl + "?type=figure&showusage";
-			string urlCards = _baseUrl + "?type=card&showusage";
+			string urlFigures = _baseUrl + "amiibo/?type=figure&showusage";
+			string urlCards = _baseUrl + "amiibo/?type=card&showusage";
 
 
 			try
