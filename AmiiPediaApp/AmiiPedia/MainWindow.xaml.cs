@@ -225,6 +225,7 @@ namespace AmiiPedia
 				var btn = GetSimpleButtonTemplate();
 
 				btn.Content = Franchises[i];
+				btn.ToolTip = Franchises[i];
 
 				franchisesPanel.Children.Add(btn);
 			}
@@ -258,7 +259,7 @@ namespace AmiiPedia
 		private void SectionButtonsVisibility(bool visible)
 		{
 			if (visible == false)
-				franchisesPanel.Visibility = Visibility.Hidden;
+				franchisesPanel.Visibility = Visibility.Collapsed;
 			else
 				franchisesPanel.Visibility = Visibility.Visible;
 		}

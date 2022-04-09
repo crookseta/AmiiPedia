@@ -388,7 +388,7 @@ namespace AmiiPedia.Models
 
 			foreach(var i in Usage)
 			{
-				builder.Append($"-{i.Usage}");
+				builder.Append($"-{i.Usage}\n");
 			}
 
 			return builder.ToString();

@@ -22,6 +22,7 @@
         </Grid.RowDefinitions>
         <Rectangle x:Name="franchiseRectangle" Grid.Column="0" Grid.RowSpan="4" Fill="#FFFF0009"/>
         <Rectangle Grid.RowSpan="2"/>
+        <Rectangle Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Grid.RowSpan="2" Fill="#FFFF0009" />
         <Button x:Name="homeBtn" Grid.RowSpan="2" Cursor="Hand" Click="homeBtn_Click" IsEnabled="False">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
@@ -49,7 +50,7 @@
         </Button>
         <Rectangle Grid.ColumnSpan="3" Grid.Column="1" Grid.RowSpan="2" Fill="#FFFF0009"/>
 
-        <DockPanel x:Name="searchDock"  Grid.Column="1" Grid.Row="1">
+        <DockPanel x:Name="searchDock"  Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="0,5,0,5">
             <Button x:Name="searchBtn" DockPanel.Dock="Right" Width="40" Content="Search"
                     Cursor="Hand" IsEnabled="False" Click="searchBtn_Click"/>
             <TextBox x:Name="searchBox" Grid.Row="1" Grid.Column="1" MaxLines="1"
@@ -59,175 +60,7 @@
 
         <ScrollViewer Grid.Row="2" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
             <WrapPanel x:Name="franchisesPanel" ItemHeight="30" ItemWidth="{Binding ElementName=franchiseRectangle, Path=ActualWidth}" 
-                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Orientation="Vertical" Visibility="Hidden">
-                <!--<ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Animal Crossing" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Banjo Kazooie" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Bayonetta" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Box Boy!" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Breath of the Wild" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Castlevania" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Chibi Robo" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Classic Nintendo" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Dark Souls" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Diablo" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Donkey Kong" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Dragon Quest" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Earthbound" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Final Fantasy" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Fire Emblem" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="F-Zero" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Kellogs" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Kid Icarus" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Kirby" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Mario Sports Superstars" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Megaman" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Metal Gear Solid" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Metroid" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Mii" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Monster Hunter" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Pac-Man" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Persona" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Pikmin" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Pokemon" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Power Pros" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Punch Out" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Shovel Knight" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Sonic" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Splatoon" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Star Fox" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Street Fighter" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Super Mario" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="The Legend of Zelda" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold"
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Wii Fit" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Xenoblade" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Yoshi's Woolly World" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
-                <ex:SimpleButton VerticalAlignment="Center" HorizontalContentAlignment="Left" Content="Yu-Gi-Oh!" 
-                                 FontSize="20" Foreground="White" FontWeight="Bold" 
-                                 BackgroundColor="#FFFF0009" HoverColor="#FFB30000"
-                                 Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>-->
+                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Orientation="Vertical" Visibility="Collapsed">
             </WrapPanel>
         </ScrollViewer>
 
@@ -241,6 +74,6 @@
                                  Style="{StaticResource customHoverButton}" Click="franchiseBtn_Click"/>
         <!--#endregion-->
 
-        <Frame x:Name="mainFrame" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" NavigationUIVisibility="Hidden"/>
+        <Frame x:Name="mainFrame" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="2" Grid.RowSpan="2" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

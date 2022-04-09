@@ -23,7 +23,7 @@
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
 
-        <Image x:Name="amiiboImage" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
+        <Image x:Name="amiiboImage" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2"
                HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
         <TextBlock x:Name="amiiboName" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
@@ -40,7 +40,7 @@
                   MouseDoubleClick="gamesListView_MouseDoubleClick" KeyDown="gamesListView_KeyDown">
             <ListView.View>
                 <GridView AllowsColumnReorder="True" ColumnHeaderToolTip="Amiibo Usage">
-                    <GridViewColumn x:Name="gameTitleColumn" Header="Game Title" Width="200"/>
+                    <GridViewColumn x:Name="gameTitleColumn" Header="Game Title" Width="auto"/>
                     <GridViewColumn x:Name="platformColumn" Header="Platform" Width="100"/>
                 </GridView>
             </ListView.View>
@@ -49,13 +49,13 @@
         <!--#region Releases -->
         <TextBlock Grid.Column="1" Grid.Row="3"
                    Text="Releases" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center"/>
-        <TextBlock x:Name="releaseAU" Grid.Column="1" Grid.Row="4" Margin="0,0,0,0"
+        <TextBlock x:Name="releaseAU" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,0,0,0"
                    Text="AU: 2014-11-29" FontSize="15"/>
-        <TextBlock x:Name="releaseEU" Grid.Column="1" Grid.Row="4" Margin="0,15,0,0"
+        <TextBlock x:Name="releaseEU" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,15,0,0"
                    Text="EU: 2014-11-28" FontSize="15"/>
-        <TextBlock x:Name="releaseJP" Grid.Column="1" Grid.Row="4" Margin="0,30,0,0"
+        <TextBlock x:Name="releaseJP" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,30,0,0"
                    Text="JP: 2014-12-06" FontSize="15"/>
-        <TextBlock x:Name="releaseNA" Grid.Column="1" Grid.Row="4" Margin="0,45,0,0"
+        <TextBlock x:Name="releaseNA" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,45,0,0"
                    Text="NA: 2014-11-21" FontSize="15"/>
         <!--#endregion-->
 
