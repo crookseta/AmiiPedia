@@ -329,6 +329,16 @@ namespace AmiiPedia
 			}
 			OnAmiiboUpdate();
 		}
+
+		private void franchiseScrollViewer_MouseEnter(object sender, MouseEventArgs e)
+		{
+			franchiseScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+		}
+
+		private void franchiseScrollViewer_MouseLeave(object sender, MouseEventArgs e)
+		{
+			franchiseScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+		}
 		#endregion
 	}
 }

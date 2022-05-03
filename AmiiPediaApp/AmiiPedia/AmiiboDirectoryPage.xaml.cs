@@ -127,27 +127,25 @@ namespace AmiiPedia
 		/// <returns></returns>
 		public async Task LoadImages(int count, IList<Amiibo> source)
 		{
-			await Task.Run(() => {
-				this.Dispatcher.Invoke(() =>
+			await this.Dispatcher.InvokeAsync(() =>
+			{
+				for (int i = 0; i < count; i++)
 				{
-					for (int i = 0; i < count; i++)
+					if (source[i] is null)
 					{
-						if (source[i] is null)
-						{
-							break;
-						}
-
-						amiiboImages.Add(GetAmiiboImageTemplate());
-
-						amiiboImages[i].Source = new BitmapImage(
-							new Uri(source[i].Image, UriKind.Absolute)
-							);
-						amiiboImages[i].ToolTip = source[i].Name;
-						amiiboImages[i].Tag = source[i];
-
-						ImagesPanel.Children.Add(amiiboImages[i]);
+						break;
 					}
-				});
+
+					amiiboImages.Add(GetAmiiboImageTemplate());
+
+					amiiboImages[i].Source = new BitmapImage(
+						new Uri(source[i].Image, UriKind.Absolute)
+						);
+					amiiboImages[i].ToolTip = source[i].Name;
+					amiiboImages[i].Tag = source[i];
+
+					ImagesPanel.Children.Add(amiiboImages[i]);
+				}
 			});
 		}
 
