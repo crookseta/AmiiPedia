@@ -46,39 +46,22 @@ namespace AmiiPedia.Processor
 
 		public static async Task<AmiiboModel> LoadAmiibos()
 		{
-			string urlFigures = _baseUrl + "amiibo/?type=figure&showusage";
-			string urlCards = _baseUrl + "amiibo/?type=card&showusage";
-
+			string url = _baseUrl + "amiibo/";
 
 			try
 			{
 				AmiiboModel model;
-				var figures = await Helper.ApiClient.GetAsync(urlFigures, HttpCompletionOption.ResponseContentRead);
+				var obj = await Helper.ApiClient.GetAsync(url, HttpCompletionOption.ResponseContentRead);
 
-				using (var body = figures.Content)
+				using(var body = obj.Content)
 				{
-					
-					if (figures.IsSuccessStatusCode)
+					if (obj.IsSuccessStatusCode)
 					{
 						model = await body.ReadAsAsync<AmiiboModel>();
 					}
 					else
 					{
-						throw new Exception(figures.ReasonPhrase);
-					}
-				}
-
-				var cards = await Helper.ApiClient.GetAsync(urlCards, HttpCompletionOption.ResponseContentRead);
-
-				using(var body = cards.Content)
-				{
-					if (cards.IsSuccessStatusCode)
-					{
-						model += await body.ReadAsAsync<AmiiboModel>();
-					}
-					else
-					{
-						throw new Exception(cards.ReasonPhrase);
+						throw new Exception(obj.ReasonPhrase);
 					}
 				}
 
@@ -89,31 +72,6 @@ namespace AmiiPedia.Processor
 				throw new ApiConnectionException("Error while connecting to API", ex);
 			}
 		}
-		//public static async Task<Amiibo> LoadAmiibo(string parameter, string name)
-		//{
-		//	string url;
-		//	if (parameter != null && name != null)
-		//	{
-		//		url = $"{_baseUrl}?{parameter}={name}";
-		//	}
-		//	else
-		//	{
-		//		url = _baseUrl;
-		//	}
-
-		//	using (HttpResponseMessage response = await Helper.ApiClient.GetAsync(url))
-		//	{
-		//		if (response.IsSuccessStatusCode)
-		//		{
-		//			Amiibo model = await response.Content.ReadAsAsync<Amiibo>();
-		//			return model;
-		//		}
-		//		else
-		//		{
-		//			throw new Exception(response.ReasonPhrase);
-		//		}
-		//	}
-		//}
 
 	}
 }
